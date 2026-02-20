@@ -1,7 +1,6 @@
 import pandas as pd
 import gspread
 import bcrypt
-import streamlit as st
 from google.oauth2.service_account import Credentials
 
 scope = [
@@ -9,25 +8,35 @@ scope = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-@st.cache_resource
 def get_client():
-    creds = Credentials.from_service_account_info(
-        st.secrets["gcp_service_account"],
+    creds = Credentials.from_service_account_file(
+        "service_account.json",
         scopes=scope
     )
     return gspread.authorize(creds)
 
-@st.cache_data(ttl=60)
+
 def load_data():
     client = get_client()
-    sheet = client.open("BreatheSmart_Data").sheet1
+    spreadsheet = client.open("BreatheSmart_Data")
+    sheet = spreadsheet.worksheet("logs")
+
     data = sheet.get_all_records()
     return pd.DataFrame(data)
 
+
 def authenticate_user(username, password):
     client = get_client()
-    sheet = client.open("Admin_Users").sheet1
+
+    # Open main spreadsheet
+    spreadsheet = client.open("BreatheSmart_Data")
+
+    # Open Admin_Users worksheet inside it
+    sheet = spreadsheet.worksheet("Admin_Users")
+
     users = pd.DataFrame(sheet.get_all_records())
+
+    users.columns = users.columns.str.strip()
 
     user = users[users["Username"] == username]
 
@@ -39,5 +48,7 @@ def authenticate_user(username, password):
 
     if bcrypt.checkpw(password.encode(), stored_hash.encode()):
         return True, role
+
+    return False, None
 
     return False, None
