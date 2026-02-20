@@ -15,7 +15,26 @@ def get_client():
     )
     return gspread.authorize(creds)
 
+import pandas as pd
+import gspread
+import bcrypt
+import streamlit as st
+from google.oauth2.service_account import Credentials
 
+scope = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"
+]
+
+@st.cache_resource
+def get_client():
+    creds = Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=scope
+    )
+    return gspread.authorize(creds)
+
+@st.cache_data(ttl=60)
 def load_data():
     client = get_client()
     spreadsheet = client.open("BreatheSmart_Data")
@@ -23,7 +42,6 @@ def load_data():
 
     data = sheet.get_all_records()
     return pd.DataFrame(data)
-
 
 def authenticate_user(username, password):
     client = get_client()
@@ -48,7 +66,5 @@ def authenticate_user(username, password):
 
     if bcrypt.checkpw(password.encode(), stored_hash.encode()):
         return True, role
-
-    return False, None
 
     return False, None
