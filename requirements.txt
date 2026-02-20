@@ -1,0 +1,12 @@
+streamlit
+pandas==2.2.1
+numpy
+gspread
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+bcrypt
+altair
+plotly
+reportlab
+python-dateutil
