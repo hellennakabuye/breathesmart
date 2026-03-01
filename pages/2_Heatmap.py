@@ -10,6 +10,8 @@ if "authenticated" not in st.session_state or not st.session_state.authenticated
 
 st.set_page_config(layout="wide")
 
+st.image("breathesmartug.png", width=320)
+
 st.title("🗺 Division Risk Heatmap")
 
 df = load_data()
