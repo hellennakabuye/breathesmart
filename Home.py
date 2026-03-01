@@ -8,7 +8,7 @@ if "authenticated" not in st.session_state:
     st.session_state.role = None
     st.session_state.username = None
 
-st.image("breathesmartug.png", width=220)
+st.image("breathesmartug.png", width=320)
 st.title("BreatheSmart UG")
 st.subheader("Secure NGO Login")
 
