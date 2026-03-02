@@ -32,10 +32,10 @@ with col1:
     st.metric("Total Screenings", len(df))
 
 with col2:
-    st.metric("High Risk Cases", df[df["Risk"] == "High"].shape[0])
+    st.metric("High Risk Cases", df[df["Risk"] >= 11].shape[0])
 
 with col3:
-    st.metric("Moderate Risk", df[df["Risk"] == "Moderate"].shape[0])
+    st.metric("Moderate Risk", df[df["Risk"] >= 6].shape[0])
 
 with col4:
     st.metric("Divisions Covered", df["Division"].nunique())
